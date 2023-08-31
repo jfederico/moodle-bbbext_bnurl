@@ -23,7 +23,17 @@
  */
 
 defined('MOODLE_INTERNAL') || die();
-$string['additionalparams'] = 'Additional param';
-$string['additionalparams:error'] = 'Additional param cannot contain HTML tags';
+$string['available_info'] = 'Available information that can be passed to the additional parameter in the URL';
+$string['available_info_desc'] = 'Available information that can be passed to the additional parameter in the URL. This can be used
+to pass information dynamically to join or create URL (i.e. when a user joins a meeting or create the meeting).';
+$string['activity_info'] = 'Activity information (ACTIVITY)';
+$string['course_info'] = 'Course info (COURSE)';
+$string['event_create'] = 'Create';
+$string['event_join'] = 'Join';
+$string['user_info'] = 'Basic user info (USER)';
 $string['pluginname'] = 'BigBlueButton FlexURL';
-
+$string['paramgroup'] = 'Parameter';
+$string['param_name'] = 'Parameter name';
+$string['param_value'] = 'Parameter value';
+$string['param_eventtype'] = 'Parameter event type';
+$string['addparamgroup'] = 'Add a new parameter';

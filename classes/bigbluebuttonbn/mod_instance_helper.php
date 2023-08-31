@@ -15,6 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 namespace bbbext_flexurl\bigbluebuttonbn;
 
+use bbbext_flexurl\utils;
 use stdClass;
 
 /**
@@ -35,11 +36,7 @@ class mod_instance_helper extends \mod_bigbluebuttonbn\local\extension\mod_insta
      * @param stdClass $bigbluebuttonbn BigBlueButtonBN form data
      **/
     public function add_instance(stdClass $bigbluebuttonbn) {
-        global $DB;
-        $DB->insert_record(self::SUBPLUGIN_TABLE, (object) [
-            'bigbluebuttonbnid' => $bigbluebuttonbn->id,
-            'additionalparams' => $bigbluebuttonbn->additionalparams ?? ''
-        ]);
+        $this->sync_additional_params($bigbluebuttonbn);
     }
 
     /**
@@ -48,20 +45,7 @@ class mod_instance_helper extends \mod_bigbluebuttonbn\local\extension\mod_insta
      * @param stdClass $bigbluebuttonbn BigBlueButtonBN form data
      **/
     public function update_instance(stdClass $bigbluebuttonbn): void {
-        global $DB;
-        $record = $DB->get_record(self::SUBPLUGIN_TABLE, [
-            'bigbluebuttonbnid' => $bigbluebuttonbn->id,
-        ]);
-        // Just in case the instance was created before the extension was installed.
-        if (empty($record)) {
-            $record = new stdClass();
-            $record->bigbluebuttonbnid = $bigbluebuttonbn->id;
-            $record->additionalparams = $bigbluebuttonbn->additionalparams ?? '';
-            $DB->insert_record(self::SUBPLUGIN_TABLE, $record);
-        } else {
-            $record->additionalparams = $bigbluebuttonbn->additionalparams ?? '';
-            $DB->update_record(self::SUBPLUGIN_TABLE, $record);
-        }
+        $this->sync_additional_params($bigbluebuttonbn);
     }
 
     /**
@@ -82,5 +66,38 @@ class mod_instance_helper extends \mod_bigbluebuttonbn\local\extension\mod_insta
      */
     public function get_join_tables(): array {
         return [self::SUBPLUGIN_TABLE];
+    }
+
+    /**
+     * Make sure that the bbbext_flexurl has the right parameters (and not more)
+     * @param stdClass $bigbluebuttonbn
+     * @return void
+     */
+    private function sync_additional_params(stdClass $bigbluebuttonbn): void {
+        global $DB;
+        // Checks first.
+        $count = $bigbluebuttonbn->flexurl_paramcount ?? 0;
+        foreach(utils::PARAM_TYPES as $type =>$paramtype) {
+            if ($count != count($bigbluebuttonbn->{'flexurl_' . $type})) {
+                debugging('FlexURL : The number of ' . $type . ' does not match the number of parameters.');
+                return;
+            }
+            if (clean_param_array($bigbluebuttonbn->{'flexurl_' . $type}, $paramtype, true) != $bigbluebuttonbn->{'flexurl_' . $type}) {
+                debugging('FlexURL : The ' . $type . ' contains invalid value.');
+                return;
+            }
+        }
+        // Then sync.
+        // First delete everything related to this module.
+        $DB->delete_records(self::SUBPLUGIN_TABLE, ['bigbluebuttonbnid' => $bigbluebuttonbn->id]);
+
+        for($index = 0; $index < $count; $index++) {
+            $queryfields = [];
+            foreach(array_keys(utils::PARAM_TYPES) as $type) {
+                $queryfields[$type] = $bigbluebuttonbn->{'flexurl_' . $type}[$index];
+            }
+            $queryfields['bigbluebuttonbnid'] = $bigbluebuttonbn->id;
+            $DB->insert_record(self::SUBPLUGIN_TABLE, (object) $queryfields);
+        }
     }
 }

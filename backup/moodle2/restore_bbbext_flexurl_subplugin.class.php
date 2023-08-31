@@ -31,7 +31,7 @@ class restore_bbbext_flexurl_subplugin extends restore_subplugin {
      */
     protected function define_bigbluebuttonbn_subplugin_structure() {
 
-        $paths = array();
+        $paths = [];
 
         $elename = $this->get_namefor('bigbluebuttonbn');
         // We used get_recommended_name() so this works.

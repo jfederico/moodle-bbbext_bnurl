@@ -36,6 +36,12 @@ class action_url_addons extends \mod_bigbluebuttonbn\local\extension\action_url_
      * 'metadata' keys)
      */
     public function execute(string $action = '', array $data = [], array $metadata = [], ?int $instanceid = null): array {
+        if ($action == 'create') {
+            $analyticcburl = get_config('bbbext_flexurl', 'analytics_callback_url');
+            if ($analyticcburl) {
+                $metadata['analytics-callback-url'] = $analyticcburl;
+            }
+        }
         if ($action == 'create' || $action == 'join') {
             if (empty($instanceid)) {
                 if (!(defined('PHPUNIT_TEST') && PHPUNIT_TEST) && !defined('BEHAT_SITE_RUNNING')) {

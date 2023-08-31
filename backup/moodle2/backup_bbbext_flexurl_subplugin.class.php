@@ -43,7 +43,7 @@ class backup_bbbext_flexurl_subplugin extends backup_subplugin {
 
         // Set source to populate the data.
         $subpluginelement->set_source_table('bbbext_flexurl',
-            array('bigbluebuttonbnid' => backup::VAR_PARENTID));
+            ['bigbluebuttonbnid' => backup::VAR_PARENTID]);
 
         return $subplugin;
     }

@@ -15,6 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 namespace bbbext_flexurl\bigbluebuttonbn;
 
+use bbbext_flexurl\utils;
 use stdClass;
 
 /**
@@ -39,7 +40,7 @@ class mod_form_addons extends \mod_bigbluebuttonbn\local\extension\mod_form_addo
     }
 
     /**
-     * Allow module to modify  the data at the pre-processing stage.
+     * Allow module to modify the data at the pre-processing stage.
      *
      * This method is also called in the bulk activity completion form.
      *
@@ -49,11 +50,19 @@ class mod_form_addons extends \mod_bigbluebuttonbn\local\extension\mod_form_addo
         // This is where we can add the data from the flexurl table to the data provided.
         if (!empty($defaultvalues['id'])) {
             global $DB;
-            $flexurlrecord = $DB->get_record(mod_instance_helper::SUBPLUGIN_TABLE, [
+            $flexurlrecords = $DB->get_records(mod_instance_helper::SUBPLUGIN_TABLE, [
                 'bigbluebuttonbnid' => $defaultvalues['id'],
             ]);
-            if ($flexurlrecord) {
-                $defaultvalues['additionalparams'] = $flexurlrecord->additionalparams;
+            if ($flexurlrecords) {
+                $flexurlrecords = array_values($flexurlrecords);
+                foreach($flexurlrecords as $flexurlrecord) {
+                    foreach (utils::PARAM_TYPES as $paramtype => $paramtypevalue) {
+                        if (!isset($defaultvalues["flexurl_{$paramtype}"])) {
+                            $defaultvalues["flexurl_{$paramtype}"] = [];
+                        }
+                        $defaultvalues["flexurl_{$paramtype}"][] = $flexurlrecord->{$paramtype} ?? '';
+                    }
+                }
             }
         }
     }
@@ -90,7 +99,32 @@ class mod_form_addons extends \mod_bigbluebuttonbn\local\extension\mod_form_addo
      * @return void
      */
     public function definition_after_data() {
-        // Nothing for now.
+        // After data.
+        $isdeleting = optional_param_array('flexurl_paramdelete', [], PARAM_RAW);
+        //// Get the index of the delete button that was pressed.
+        if (!empty($isdeleting)) {
+            $firstindex = array_key_first($isdeleting);
+            // Then reassign values from the deleted group to the previous group.
+            $paramcount = optional_param('flexurl_paramcount', 0, PARAM_INT);
+            for ($index = $firstindex; $index < $paramcount; $index++) {
+                $nextindex = $index + 1;
+                if ($this->mform->elementExists("flexurl_paramgroup[{$nextindex}]")) {
+                    $nextgroupelement = $this->mform->getElement("flexurl_paramgroup[{$nextindex}]");
+                    if (!empty($nextgroupelement)) {
+                        $nextgroupvalue = $nextgroupelement->getValue();
+                        $currentgroupelement = $this->mform->getElement("flexurl_paramgroup[{$index}]");
+                        $value = [
+                            "flexurl_paramname[{$index}]" => $nextgroupvalue["flexurl_paramname[{$nextindex}]"],
+                            "flexurl_paramvalue[{$index}]" => $nextgroupvalue["flexurl_paramvalue[{$nextindex}]"],
+                        ];
+                        $currentgroupelement->setValue($value);
+                    }
+                }
+            }
+            $newparamcount = $paramcount - 1;
+            $this->mform->removeElement("flexurl_paramgroup[{$newparamcount}]");
+            $this->mform->getElement('flexurl_paramcount')->setValue($newparamcount);
+        }
     }
 
     /**
@@ -98,8 +132,64 @@ class mod_form_addons extends \mod_bigbluebuttonbn\local\extension\mod_form_addo
      */
     public function add_fields(): void {
         $this->mform->addElement('header', 'flexurl', get_string('pluginname', 'bbbext_flexurl'));
-        $this->mform->addElement('text', 'additionalparams', get_string('additionalparams', 'bbbext_flexurl'));
-        $this->mform->setType('additionalparams', PARAM_TEXT);
+
+        $paramcount = optional_param('flexurl_paramcount', $this->bigbluebuttonbndata->paramcount ?? 0, PARAM_RAW);
+        $paramcount += optional_param('flexurl_addparamgroup', 0, PARAM_RAW) ? 1 : 0;
+        $isdeleting = optional_param_array('flexurl_paramdelete', [], PARAM_RAW);
+        foreach ($isdeleting as $index => $value) {
+            // This prevents the last delete button from submitting the form.
+            $this->mform->registerNoSubmitButton("flexurl_paramdelete[$index]");
+        }
+        for ($index = 0; $index < $paramcount; $index++) {
+            $paramtype = $this->mform->createElement(
+                'select',
+                "flexurl_eventtype[$index]",
+                get_string('param_eventtype', 'bbbext_flexurl'),
+                utils::get_option_for_eventtype(),
+                ['multiple' => true, 'size' => '2']
+            );
+            $paramname = $this->mform->createElement(
+                'text',
+                "flexurl_paramname[$index]",
+                get_string('param_name', 'bbbext_flexurl'),
+                ['size' => '8']
+            );
+            $paramvalue = $this->mform->createElement(
+                'selectgroups',
+                "flexurl_paramvalue[$index]",
+                get_string('param_value', 'bbbext_flexurl'),
+                utils::get_options_for_parameters(),
+                ['size' => '1']
+            );
+
+            $paramdelete = $this->mform->createElement(
+                'submit',
+                "flexurl_paramdelete[$index]",
+                get_string('delete'),
+            );
+
+            $this->mform->addGroup(
+                [
+                    $paramtype, $paramname, $paramvalue, $paramdelete,
+                ],
+                "flexurl_paramgroup[$index]",
+                get_string('paramgroup', 'bbbext_flexurl'),
+                [' '],
+                false
+            );
+            $this->mform->setType("flexurl_paramname[$index]", PARAM_TEXT);
+            $this->mform->setType("flexurl_paramvalue[$index]", PARAM_RAW);
+            $this->mform->setType("flexurl_eventtype[$index]", PARAM_RAW);
+            $this->mform->setType("flexurl_paramdelete[$index]", PARAM_RAW);
+            $this->mform->registerNoSubmitButton("flexurl_paramdelete[$index]");
+        }
+        // Add a button to add new param groups.
+        $this->mform->addElement('submit', 'flexurl_addparamgroup', get_string('addparamgroup', 'bbbext_flexurl'));
+        $this->mform->setType('flexurl_addparamgroup', PARAM_TEXT);
+        $this->mform->registerNoSubmitButton('flexurl_addparamgroup');
+        $this->mform->addElement('hidden', 'flexurl_paramcount');
+        $this->mform->setType('flexurl_paramcount', PARAM_INT);
+        $this->mform->setConstants(['flexurl_paramcount' => $paramcount]);
     }
 
     /**

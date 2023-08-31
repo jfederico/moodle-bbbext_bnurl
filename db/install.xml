@@ -4,15 +4,17 @@
        xsi:noNamespaceSchemaLocation="../../../../../lib/xmldb/xmldb.xsd"
 >
     <TABLES>
-        <TABLE NAME="bbbext_flexurl" COMMENT="Default comment for bbbext_flexurl, please edit me">
+        <TABLE NAME="bbbext_flexurl" COMMENT="This tables store all the additional parameters that can be passed on create or join">
             <FIELDS>
                 <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
                 <FIELD NAME="bigbluebuttonbnid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
-                <FIELD NAME="additionalparams" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
+                <FIELD NAME="eventtype" TYPE="int" LENGTH="2" NOTNULL="true" SEQUENCE="false" COMMENT="This can be used for JOIN(1), CREATE(2)"/>
+                <FIELD NAME="paramname" TYPE="char" LENGTH="1024" NOTNULL="true" SEQUENCE="false"/>
+                <FIELD NAME="paramvalue" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
-                <KEY NAME="fk_bigbluebuttonbnid" TYPE="foreign-unique" FIELDS="bigbluebuttonbnid" REFTABLE="bigbluebuttonbn" REFFIELDS="id"/>
+                <KEY NAME="fk_bigbluebuttonbnid" TYPE="foreign" FIELDS="bigbluebuttonbnid" REFTABLE="bigbluebuttonbn" REFFIELDS="id"/>
             </KEYS>
         </TABLE>
     </TABLES>
