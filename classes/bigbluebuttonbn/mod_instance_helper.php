@@ -27,7 +27,9 @@ use stdClass;
  * @author    Laurent David (laurent@call-learning.fr)
  */
 class mod_instance_helper extends \mod_bigbluebuttonbn\local\extension\mod_instance_helper {
-    // This is the name of the table that will be used to store additional data for the instance.
+    /**
+     * This is the name of the table that will be used to store additional data for the instance.
+     */
     const SUBPLUGIN_TABLE = 'bbbext_flexurl';
 
     /**
@@ -37,6 +39,44 @@ class mod_instance_helper extends \mod_bigbluebuttonbn\local\extension\mod_insta
      **/
     public function add_instance(stdClass $bigbluebuttonbn) {
         $this->sync_additional_params($bigbluebuttonbn);
+    }
+
+    /**
+     * Make sure that the bbbext_flexurl has the right parameters (and not more)
+     *
+     * @param stdClass $bigbluebuttonbn
+     * @return void
+     */
+    private function sync_additional_params(stdClass $bigbluebuttonbn): void {
+        global $DB;
+        // Checks first.
+        $count = $bigbluebuttonbn->flexurl_paramcount ?? 0;
+        foreach (utils::PARAM_TYPES as $type => $paramtype) {
+            if (!isset($bigbluebuttonbn->{'flexurl_' . $type})) {
+                return;
+            }
+            if ($count != count($bigbluebuttonbn->{'flexurl_' . $type})) {
+                debugging('FlexURL : The number of ' . $type . ' does not match the number of parameters.');
+                return;
+            }
+            if (clean_param_array($bigbluebuttonbn->{'flexurl_' . $type}, $paramtype, true) !=
+                $bigbluebuttonbn->{'flexurl_' . $type}) {
+                debugging('FlexURL : The ' . $type . ' contains invalid value.');
+                return;
+            }
+        }
+        // Then sync.
+        // First delete everything related to this module.
+        $DB->delete_records(self::SUBPLUGIN_TABLE, ['bigbluebuttonbnid' => $bigbluebuttonbn->id]);
+
+        for ($index = 0; $index < $count; $index++) {
+            $queryfields = [];
+            foreach (array_keys(utils::PARAM_TYPES) as $type) {
+                $queryfields[$type] = $bigbluebuttonbn->{'flexurl_' . $type}[$index];
+            }
+            $queryfields['bigbluebuttonbnid'] = $bigbluebuttonbn->id;
+            $DB->insert_record(self::SUBPLUGIN_TABLE, (object) $queryfields);
+        }
     }
 
     /**
@@ -62,42 +102,10 @@ class mod_instance_helper extends \mod_bigbluebuttonbn\local\extension\mod_insta
 
     /**
      * Get any join table name that is used to store additional data for the instance.
+     *
      * @return array
      */
     public function get_join_tables(): array {
-        return [self::SUBPLUGIN_TABLE];
-    }
-
-    /**
-     * Make sure that the bbbext_flexurl has the right parameters (and not more)
-     * @param stdClass $bigbluebuttonbn
-     * @return void
-     */
-    private function sync_additional_params(stdClass $bigbluebuttonbn): void {
-        global $DB;
-        // Checks first.
-        $count = $bigbluebuttonbn->flexurl_paramcount ?? 0;
-        foreach(utils::PARAM_TYPES as $type =>$paramtype) {
-            if ($count != count($bigbluebuttonbn->{'flexurl_' . $type})) {
-                debugging('FlexURL : The number of ' . $type . ' does not match the number of parameters.');
-                return;
-            }
-            if (clean_param_array($bigbluebuttonbn->{'flexurl_' . $type}, $paramtype, true) != $bigbluebuttonbn->{'flexurl_' . $type}) {
-                debugging('FlexURL : The ' . $type . ' contains invalid value.');
-                return;
-            }
-        }
-        // Then sync.
-        // First delete everything related to this module.
-        $DB->delete_records(self::SUBPLUGIN_TABLE, ['bigbluebuttonbnid' => $bigbluebuttonbn->id]);
-
-        for($index = 0; $index < $count; $index++) {
-            $queryfields = [];
-            foreach(array_keys(utils::PARAM_TYPES) as $type) {
-                $queryfields[$type] = $bigbluebuttonbn->{'flexurl_' . $type}[$index];
-            }
-            $queryfields['bigbluebuttonbnid'] = $bigbluebuttonbn->id;
-            $DB->insert_record(self::SUBPLUGIN_TABLE, (object) $queryfields);
-        }
+        return []; // We don't make the join here as we have several values per instance.
     }
 }

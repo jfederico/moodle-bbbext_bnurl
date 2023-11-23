@@ -30,6 +30,7 @@ $string['activity_info'] = 'Activity information (ACTIVITY)';
 $string['course_info'] = 'Course info (COURSE)';
 $string['event_create'] = 'Create';
 $string['event_join'] = 'Join';
+$string['event_all'] = 'All';
 $string['user_info'] = 'Basic user info (USER)';
 $string['pluginname'] = 'BigBlueButton FlexURL';
 $string['paramgroup'] = 'Parameter';

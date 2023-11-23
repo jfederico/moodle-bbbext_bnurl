@@ -8,7 +8,7 @@
             <FIELDS>
                 <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
                 <FIELD NAME="bigbluebuttonbnid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
-                <FIELD NAME="eventtype" TYPE="int" LENGTH="2" NOTNULL="true" SEQUENCE="false" COMMENT="This can be used for JOIN(1), CREATE(2)"/>
+                <FIELD NAME="eventtype" TYPE="int" LENGTH="2" NOTNULL="true" SEQUENCE="false" COMMENT="This can be used for JOIN(1), CREATE(2), and all other (8)"/>
                 <FIELD NAME="paramname" TYPE="char" LENGTH="1024" NOTNULL="true" SEQUENCE="false"/>
                 <FIELD NAME="paramvalue" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
             </FIELDS>

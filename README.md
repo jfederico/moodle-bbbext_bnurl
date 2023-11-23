@@ -4,15 +4,16 @@ BigblueButton Extension - FlexURL
 * Copyright: Blindside Networks Inc
 * License:  GNU GENERAL PUBLIC LICENSE Version 3
 
-This is an extension plugin for BigBluebButtonBN module that will allow you to some parameters dynamically
-to the create and join URL. This is sometimes needed for specific BigBlueButton integrations.
+This is an extension plugin for the BigBlueButtonBN module. This will allow user to add parameters to a create and join action url, so to
+be able to address a variety of use cases.
+For now the parameters are not "free forms" but fixed on entities like user, course and module so to be able to address the most common use cases while
+keeping some control on the parameters that are passed to the BigBlueButton server.
 
 
 Description
 ===========
 This plugin shows how to extend BigBluebButtonBN module to:
 * Add a new parameter to an Action URL (create and join)
-* Setup a new parameter in the BigBlueButtonBN module settings (and edit form)
 
 
 Installation

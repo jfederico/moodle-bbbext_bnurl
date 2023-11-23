@@ -30,7 +30,6 @@ class restore_bbbext_flexurl_subplugin extends restore_subplugin {
      * @return array
      */
     protected function define_bigbluebuttonbn_subplugin_structure() {
-
         $paths = [];
 
         $elename = $this->get_namefor('bigbluebuttonbn');
@@ -38,7 +37,6 @@ class restore_bbbext_flexurl_subplugin extends restore_subplugin {
         $elepath = $this->get_pathfor('/bbbext_flexurl');
 
         $paths[] = new restore_path_element($elename, $elepath);
-
         return $paths;
     }
 

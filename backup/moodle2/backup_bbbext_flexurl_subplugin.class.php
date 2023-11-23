@@ -33,17 +33,21 @@ class backup_bbbext_flexurl_subplugin extends backup_subplugin {
         // Create XML elements.
         $subplugin = $this->get_subplugin_element();
         $subpluginwrapper = new backup_nested_element($this->get_recommended_name());
-        $subpluginelement = new backup_nested_element('bbbext_flexurl',
+        $subpluginelement = new backup_nested_element(
+            'bbbext_flexurl',
             null,
-            ['additionalparams']);
+            ['eventtype', 'paramname', 'paramvalue']
+        );
 
         // Connect XML elements into the tree.
         $subplugin->add_child($subpluginwrapper);
         $subpluginwrapper->add_child($subpluginelement);
 
         // Set source to populate the data.
-        $subpluginelement->set_source_table('bbbext_flexurl',
-            ['bigbluebuttonbnid' => backup::VAR_PARENTID]);
+        $subpluginelement->set_source_table(
+            'bbbext_flexurl',
+            ['bigbluebuttonbnid' => backup::VAR_PARENTID]
+        );
 
         return $subplugin;
     }

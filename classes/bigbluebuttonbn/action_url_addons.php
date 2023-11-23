@@ -15,6 +15,10 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 namespace bbbext_flexurl\bigbluebuttonbn;
 
+use bbbext_flexurl\utils;
+use core_form\util;
+use mod_bigbluebuttonbn\instance;
+
 /**
  * A single action class to mutate the action URL.
  *
@@ -36,31 +40,23 @@ class action_url_addons extends \mod_bigbluebuttonbn\local\extension\action_url_
      * 'metadata' keys)
      */
     public function execute(string $action = '', array $data = [], array $metadata = [], ?int $instanceid = null): array {
-        if ($action == 'create') {
-            $analyticcburl = get_config('bbbext_flexurl', 'analytics_callback_url');
-            if ($analyticcburl) {
-                $metadata['analytics-callback-url'] = $analyticcburl;
-            }
-        }
-        if ($action == 'create' || $action == 'join') {
-            if (empty($instanceid)) {
-                if (!(defined('PHPUNIT_TEST') && PHPUNIT_TEST) && !defined('BEHAT_SITE_RUNNING')) {
-                    // Debugging messages will fail mod_bigbluebuttonbn behat or phpunit tests as soon as the plugin is installed.
-                    // Which is not what we want here.
-                    debugging('No instanceid provided to action_url_addons, this mean we will not be able to retrieve any' .
-                        'instance specific data in the subplugins.');
+        global $DB;
+        if ($instanceid) {
+            $instance = instance::get_from_instanceid($instanceid);
+            $flexurlrecords = $DB->get_records(mod_instance_helper::SUBPLUGIN_TABLE, [
+                'bigbluebuttonbnid' => $instanceid,
+            ]);
+            $eventtypes = array_flip(utils::ACTION_CODES);
+            foreach ($flexurlrecords as $flexurlrecord) {
+                if ($flexurlrecord->eventtype != utils::ACTION_CODES['all'] &&
+                    $eventtypes[$flexurlrecord->eventtype] != $action) {
+                    continue;
                 }
-            } else {
-                global $DB;
-                $record = $DB->get_record(mod_instance_helper::SUBPLUGIN_TABLE, [
-                    'bigbluebuttonbnid' => $instanceid,
-                ]);
-                if ($record) {
-                    $metadata['additionalparams'] = $record->additionalparams ?? '';
-                }
-            }
-        }
 
+                $metadata[$flexurlrecord->paramname] = utils::get_value_for_field($flexurlrecord->paramvalue, $instance);
+
+            }
+        }
         return ['data' => $data, 'metadata' => $metadata];
     }
 }
