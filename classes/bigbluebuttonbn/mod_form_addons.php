@@ -233,7 +233,8 @@ class mod_form_addons extends \mod_bigbluebuttonbn\local\extension\mod_form_addo
     public function validation(array $data, array $files): array {
         $errors = [];
         foreach (utils::PARAM_TYPES as $paramtype => $paramtypevalue) {
-            if (clean_param_array($data['flexurl_' . $paramtype], $paramtypevalue, true) === false) {
+            if (!empty($data['flexurl_' . $paramtype])
+                && clean_param_array($data['flexurl_' . $paramtype], $paramtypevalue, true) === false) {
                 $errors["flexurl_{$paramtype}"] = get_string('invalidvalue', 'bbbext_flexurl');
             }
         }
