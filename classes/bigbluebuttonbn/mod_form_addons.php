@@ -41,7 +41,7 @@ class mod_form_addons extends \mod_bigbluebuttonbn\local\extension\mod_form_addo
         if (!empty($bigbluebuttonbndata->id)) {
             $data = $this->retrieve_additional_data($bigbluebuttonbndata->id);
             $this->bigbluebuttonbndata = (object) array_merge((array) $this->bigbluebuttonbndata, $data);
-            $this->bigbluebuttonbndata->flexurl_paramcount = count($data);
+            $this->bigbluebuttonbndata->flexurl_paramcount = count($data["flexurl_".array_key_first(utils::PARAM_TYPES)]);
         }
     }
 
