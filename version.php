@@ -25,5 +25,5 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->version   = 2023020800;
-$plugin->requires  = 2023020300;
+$plugin->requires  = 2022112800;
 $plugin->component = 'bbbext_flexurl';
