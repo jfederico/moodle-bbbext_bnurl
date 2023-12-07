@@ -52,8 +52,7 @@ class action_url_addons extends \mod_bigbluebuttonbn\local\extension\action_url_
                     $eventtypes[$flexurlrecord->eventtype] != $action) {
                     continue;
                 }
-
-                $metadata[$flexurlrecord->paramname] = utils::get_value_for_field($flexurlrecord->paramvalue, $instance);
+                $metadata[$flexurlrecord->paramname] = utils::get_real_value($flexurlrecord->paramvalue, $instance);
 
             }
         }

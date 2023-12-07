@@ -57,10 +57,14 @@ class utils {
         $selectedptypes = array_map('trim', $selectedptypes);
         foreach ($parametertypes as $key => $value) {
             if (in_array($key, $selectedptypes)) {
-                $options[$value] = self::get_fields_for_parameter($key);
+                $options = array_merge($options, self::get_fields_for_parameter($key));
             }
         }
         ksort($options);
+        // Now add a marker so we know they are placeholder for values.
+        $options = array_combine(array_map(function($key) {
+            return '%' . $key . '%';
+        }, array_keys($options)), $options);
         return $options;
     }
 
@@ -110,7 +114,22 @@ class utils {
             return '';
         }
     }
-
+    /**
+     * Get value for this parameter
+     *
+     * @param string $field
+     * @param instance $instance
+     * @return string
+     */
+    public static function get_real_value(string $rawvalue, instance $instance): string {
+        // First check if there is a marker for a placeholder.
+        if (strpos($rawvalue, '%') === 0) {
+            $field = substr($rawvalue, 1, -1);
+            return self::get_value_for_field($field, $instance);
+        } else {
+            return $rawvalue;
+        }
+    }
     /**
      * Get user fields prefixed by user.
      *
