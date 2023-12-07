@@ -117,7 +117,7 @@ class utils {
     /**
      * Get value for this parameter
      *
-     * @param string $field
+     * @param string $rawvalue
      * @param instance $instance
      * @return string
      */
