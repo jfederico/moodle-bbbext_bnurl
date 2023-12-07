@@ -38,5 +38,5 @@ $string['param_name'] = 'Parameter name';
 $string['param_value'] = 'Parameter value';
 $string['param_eventtype'] = 'Parameter event type';
 $string['addparamgroup'] = 'Add a new parameter';
-$string['settings'] = 'Extra parameters';
-$string['settings_help'] = 'The keys and values added in this section are sent to BigBlueButton as \'extra parameters\' when the room is created or the user joins the meeting.';
+$string['formname'] = 'Extra parameters';
+$string['formname_help'] = 'The keys and values added in this section are sent to BigBlueButton as \'extra parameters\' when the room is created or the user joins the meeting.';
