@@ -30,10 +30,7 @@ $string['activity_info'] = 'Activity information (ACTIVITY)';
 $string['course_info'] = 'Course info (COURSE)';
 $string['event_create'] = 'Create';
 $string['event_join'] = 'Join';
-$string['event_all'] = 'All';
-$string['flexurl_help'] = 'This allows you to add additional parameters to the join/create URL of a BigBlueButton activity.
-So you need first to choose a name for your parameter, then the value of the parameter and finally the event type
-(create, join or both).';
+$string['event_all'] = 'Both';
 $string['user_info'] = 'Basic user info (USER)';
 $string['pluginname'] = 'BigBlueButton FlexURL';
 $string['paramgroup'] = 'Parameter';
@@ -41,3 +38,5 @@ $string['param_name'] = 'Parameter name';
 $string['param_value'] = 'Parameter value';
 $string['param_eventtype'] = 'Parameter event type';
 $string['addparamgroup'] = 'Add a new parameter';
+$string['settings'] = 'Extra parameters';
+$string['settings_help'] = 'The keys and values added in this section are sent to BigBlueButton as \'extra parameters\' when the room is created or the user joins the meeting.';
