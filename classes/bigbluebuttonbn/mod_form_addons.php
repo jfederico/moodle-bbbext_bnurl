@@ -162,7 +162,6 @@ class mod_form_addons extends \mod_bigbluebuttonbn\local\extension\mod_form_addo
      * Add new form field definition
      */
     public function add_fields(): void {
-        global $CFG;
         $this->mform->addElement('header', 'flexurl', get_string('settings', 'bbbext_flexurl'));
         $this->mform->addHelpButton('flexurl', 'settings', 'bbbext_flexurl');
         $paramcount = optional_param('flexurl_paramcount', $this->bigbluebuttonbndata->flexurl_paramcount ?? 0, PARAM_RAW);
