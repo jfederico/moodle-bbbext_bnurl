@@ -16,7 +16,6 @@
 namespace bbbext_flexurl\bigbluebuttonbn;
 
 use bbbext_flexurl\utils;
-use MoodleQuickForm;
 use stdClass;
 
 /**
@@ -163,9 +162,8 @@ class mod_form_addons extends \mod_bigbluebuttonbn\local\extension\mod_form_addo
      * Add new form field definition
      */
     public function add_fields(): void {
-        global $CFG;
         $this->mform->addElement('header', 'flexurl', get_string('pluginname', 'bbbext_flexurl'));
-
+        $this->mform->addHelpButton('flexurl', 'flexurl', 'bbbext_flexurl');
         $paramcount = optional_param('flexurl_paramcount', $this->bigbluebuttonbndata->flexurl_paramcount ?? 0, PARAM_RAW);
         $paramcount += optional_param('flexurl_addparamgroup', 0, PARAM_RAW) ? 1 : 0;
         $isdeleting = optional_param_array('flexurl_paramdelete', [], PARAM_RAW);
@@ -217,6 +215,7 @@ class mod_form_addons extends \mod_bigbluebuttonbn\local\extension\mod_form_addo
             $this->mform->setType("flexurl_paramvalue[$index]", utils::PARAM_TYPES['paramvalue']);
             $this->mform->setType("flexurl_eventtype[$index]", utils::PARAM_TYPES['eventtype']);
             $this->mform->setType("flexurl_paramdelete[$index]", PARAM_RAW);
+
             $this->mform->registerNoSubmitButton("flexurl_paramdelete[$index]");
         }
         // Add a button to add new param groups.
