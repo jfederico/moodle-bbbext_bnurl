@@ -164,7 +164,7 @@ class mod_form_addons extends \mod_bigbluebuttonbn\local\extension\mod_form_addo
      */
     public function add_fields(): void {
         global $CFG;
-        $this->mform->addElement('header', 'flexurl', get_string('pluginname', 'bbbext_flexurl'));
+        $this->mform->addElement('header', 'flexurl', get_string('settings', 'bbbext_flexurl'));
 
         $paramcount = optional_param('flexurl_paramcount', $this->bigbluebuttonbndata->flexurl_paramcount ?? 0, PARAM_RAW);
         $paramcount += optional_param('flexurl_addparamgroup', 0, PARAM_RAW) ? 1 : 0;
@@ -218,6 +218,7 @@ class mod_form_addons extends \mod_bigbluebuttonbn\local\extension\mod_form_addo
             $this->mform->setType("flexurl_eventtype[$index]", utils::PARAM_TYPES['eventtype']);
             $this->mform->setType("flexurl_paramdelete[$index]", PARAM_RAW);
             $this->mform->registerNoSubmitButton("flexurl_paramdelete[$index]");
+
         }
         // Add a button to add new param groups.
         $this->mform->addElement('submit', 'flexurl_addparamgroup', get_string('addparamgroup', 'bbbext_flexurl'));
