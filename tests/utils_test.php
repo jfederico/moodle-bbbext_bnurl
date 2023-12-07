@@ -115,45 +115,39 @@ class utils_test extends \advanced_testcase {
         $this->assertNotEmpty($options);
         $this->assertEquals(
             json_decode('{
-"Activity information (ACTIVITY)": {
-        "activityinfo.id": "activityinfo.id",
-    "activityinfo.name": "activityinfo.name",
-    "activityinfo.url": "activityinfo.url",
-    "activityinfo.iconurl": "activityinfo.iconurl"
-},
-"Course info (COURSE)": {
-    "courseinfo.id": "courseinfo.id",
-    "courseinfo.fullname": "courseinfo.fullname",
-    "courseinfo.shortname": "courseinfo.shortname",
-    "courseinfo.idnumber": "courseinfo.idnumber",
-    "courseinfo.summary": "courseinfo.summary",
-    "courseinfo.summaryformat": "courseinfo.summaryformat",
-    "courseinfo.startdate": "courseinfo.startdate",
-    "courseinfo.enddate": "courseinfo.enddate",
-    "courseinfo.visible": "courseinfo.visible",
-    "courseinfo.showactivitydates": "courseinfo.showactivitydates",
-    "courseinfo.showcompletionconditions": "courseinfo.showcompletionconditions",
-    "courseinfo.pdfexportfont": "courseinfo.pdfexportfont",
-    "courseinfo.fullnamedisplay": "courseinfo.fullnamedisplay",
-    "courseinfo.viewurl": "courseinfo.viewurl",
-    "courseinfo.courseimage": "courseinfo.courseimage",
-    "courseinfo.progress": "courseinfo.progress",
-    "courseinfo.hasprogress": "courseinfo.hasprogress",
-    "courseinfo.isfavourite": "courseinfo.isfavourite",
-    "courseinfo.hidden": "courseinfo.hidden",
-    "courseinfo.timeaccess": "courseinfo.timeaccess",
-    "courseinfo.showshortname": "courseinfo.showshortname",
-    "courseinfo.coursecategory": "courseinfo.coursecategory"
-},
-"Basic user info (USER)": {
-    "user.alternatename": "user.alternatename",
-    "user.email": "user.email",
-    "user.firstname": "user.firstname",
-    "user.firstnamephonetic": "user.firstnamephonetic",
-    "user.lastname": "user.lastname",
-    "user.lastnamephonetic": "user.lastnamephonetic",
-    "user.middlename": "user.middlename"
-}
+    "%activityinfo.id%": "activityinfo.id",
+    "%activityinfo.name%": "activityinfo.name",
+    "%activityinfo.url%": "activityinfo.url",
+    "%activityinfo.iconurl%": "activityinfo.iconurl",
+    "%courseinfo.id%": "courseinfo.id",
+    "%courseinfo.fullname%": "courseinfo.fullname",
+    "%courseinfo.shortname%": "courseinfo.shortname",
+    "%courseinfo.idnumber%": "courseinfo.idnumber",
+    "%courseinfo.summary%": "courseinfo.summary",
+    "%courseinfo.summaryformat%": "courseinfo.summaryformat",
+    "%courseinfo.startdate%": "courseinfo.startdate",
+    "%courseinfo.enddate%": "courseinfo.enddate",
+    "%courseinfo.visible%": "courseinfo.visible",
+    "%courseinfo.showactivitydates%": "courseinfo.showactivitydates",
+    "%courseinfo.showcompletionconditions%": "courseinfo.showcompletionconditions",
+    "%courseinfo.pdfexportfont%": "courseinfo.pdfexportfont",
+    "%courseinfo.fullnamedisplay%": "courseinfo.fullnamedisplay",
+    "%courseinfo.viewurl%": "courseinfo.viewurl",
+    "%courseinfo.courseimage%": "courseinfo.courseimage",
+    "%courseinfo.progress%": "courseinfo.progress",
+    "%courseinfo.hasprogress%": "courseinfo.hasprogress",
+    "%courseinfo.isfavourite%": "courseinfo.isfavourite",
+    "%courseinfo.hidden%": "courseinfo.hidden",
+    "%courseinfo.timeaccess%": "courseinfo.timeaccess",
+    "%courseinfo.showshortname%": "courseinfo.showshortname",
+    "%courseinfo.coursecategory%": "courseinfo.coursecategory",
+    "%user.alternatename%": "user.alternatename",
+    "%user.email%": "user.email",
+    "%user.firstname%": "user.firstname",
+    "%user.firstnamephonetic%": "user.firstnamephonetic",
+    "%user.lastname%": "user.lastname",
+    "%user.lastnamephonetic%": "user.lastnamephonetic",
+    "%user.middlename%": "user.middlename"
 }', true)
             , $options);
     }

@@ -16,6 +16,7 @@
 namespace bbbext_flexurl\bigbluebuttonbn;
 
 use bbbext_flexurl\utils;
+use MoodleQuickForm;
 use stdClass;
 
 /**
@@ -41,7 +42,7 @@ class mod_form_addons extends \mod_bigbluebuttonbn\local\extension\mod_form_addo
         if (!empty($bigbluebuttonbndata->id)) {
             $data = $this->retrieve_additional_data($bigbluebuttonbndata->id);
             $this->bigbluebuttonbndata = (object) array_merge((array) $this->bigbluebuttonbndata, $data);
-            $this->bigbluebuttonbndata->flexurl_paramcount = count($data["flexurl_".array_key_first(utils::PARAM_TYPES)]);
+            $this->bigbluebuttonbndata->flexurl_paramcount = count($data["flexurl_".array_key_first(utils::PARAM_TYPES)] ?? []);
         }
     }
 
@@ -162,6 +163,7 @@ class mod_form_addons extends \mod_bigbluebuttonbn\local\extension\mod_form_addo
      * Add new form field definition
      */
     public function add_fields(): void {
+        global $CFG;
         $this->mform->addElement('header', 'flexurl', get_string('pluginname', 'bbbext_flexurl'));
 
         $paramcount = optional_param('flexurl_paramcount', $this->bigbluebuttonbndata->flexurl_paramcount ?? 0, PARAM_RAW);
@@ -179,10 +181,13 @@ class mod_form_addons extends \mod_bigbluebuttonbn\local\extension\mod_form_addo
                 ['size' => '6']
             );
             $paramvalue = $this->mform->createElement(
-                'selectgroups',
+                'autocomplete',
                 "flexurl_paramvalue[$index]",
                 get_string('param_value', 'bbbext_flexurl'),
                 utils::get_options_for_parameters(),
+                [
+                    'tags' => true,
+                ]
             );
             $paramtype = $this->mform->createElement(
                 'select',
