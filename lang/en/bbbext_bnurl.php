@@ -35,6 +35,7 @@ $string['event_create'] = 'Create';
 $string['event_join'] = 'Join';
 $string['formname'] = 'Extra parameters';
 $string['formname_help'] = 'The keys and values added in this section are sent to BigBlueButton as \'extra parameters\' when the room is created or the user joins the meeting.';
+$string['privacy:metadata'] = 'This extension does not store any personal data.';
 $string['param_eventtype'] = 'Parameter event type';
 $string['param_name'] = 'Parameter name';
 $string['param_value'] = 'Parameter value';
